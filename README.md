@@ -10,16 +10,19 @@ chapter.
 
 ## Current phase
 
-Closed-book contract only. No implementation, throughput result, durability result, public CI, production deployment, or external
-acceptance is claimed yet.
+Source comparison and the first design decision are complete; implementation is still pending. The selected slice is one
+PostgreSQL-fenced synthetic partition whose immutable batch bytes must be read back from two of three local replica directories
+before the committed high watermark advances. Stable producer epoch/sequence and consumer-group generation/checkpoint receipts
+cover response loss and stale actors.
 
-The first runnable slice will be chosen only after comparing the fixed chapter with primary specifications and papers. Candidate
-focus is one replicated partition with stable producer intent, committed-prefix reads, leader fencing, and consumer-group generation
-fencing—not a feature-complete broker.
+This is deliberately not a Kafka-compatible broker, Raft implementation, cross-host quorum, or disk-power-loss proof. No
+throughput result, durability result, public CI, production deployment, or external acceptance is claimed yet.
 
 ## Read first
 
 - [Closed-book contract](docs/closed-book-contract.md)
+- [Fixed-source and primary-source comparison](docs/research-log.md)
+- [ADR 0001: PostgreSQL-fenced quorum batches and generation checkpoints](docs/adr/0001-postgres-fenced-quorum-batches-and-generation-checkpoints.md)
 - [Security policy](SECURITY.md)
 
 ## Evidence boundary
