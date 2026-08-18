@@ -2,19 +2,21 @@
 
 ## Current status
 
-The implementation has passed the complete local gate on 2026-08-19 with Node 26.7.0 and PostgreSQL 17.11. Public CI is not yet a
-fact. This document will name the exact implementation commit and GitHub Actions run only after all Node 22/24/26 jobs complete.
+Implementation commit `968e8b4896ace6130e4ac25c34da0b7817c79c82` passed the complete public matrix in
+[GitHub Actions run 32194803417](https://github.com/estelledc/system-design-19-distributed-message-queue/actions/runs/32194803417).
 
-Local observations:
+Each Node 22/24/26 job used the digest-pinned PostgreSQL 17.11 service and completed:
 
-- 17 pure tests passed; zero failed, skipped, cancelled, or todo;
-- 12 real PostgreSQL tests passed; zero failed, skipped, cancelled, or todo;
-- the true-process smoke passed three separate SIGKILL windows and ended with high watermark 3, two committed batches, two
-  completed fetch receipts, and one checkpoint receipt;
-- the bounded benchmark committed and fetched 512 records in 32 batches, with 96 replica receipts and four fetches;
-- npm install reported zero vulnerabilities before the full audit gate;
-- no deployment, producer/client receipt, application handler, downstream side effect, independent-host durability, SLA, or
-  external acceptance was tested.
+- repository-policy, syntax, link, workflow-pin, and portable-data checks;
+- 17 pure tests and 12 real PostgreSQL tests, all passed with zero failed/skipped/cancelled/todo;
+- npm high-severity audit with zero reported vulnerabilities;
+- the same three-SIGKILL smoke receipt: high watermark 3, two committed batches, two completed fetches, one checkpoint, stale
+  member fenced, and three records visibly replayed after rebalance;
+- the fixed 512-record benchmark with 32 batches, 96 replica receipts, and four fetches.
+
+No deployment, producer/client receipt, application handler, downstream side effect, independent-host durability, SLA, or external
+acceptance was tested. The implementation receipt stays bound to `968e8b4...`; later prose-only runs prove repository consistency
+for their own commits but do not rewrite the implementation observations.
 
 ## Retained local failure
 
@@ -90,25 +92,29 @@ The fixture is fixed at one partition, three local replica directories, 32 seque
 ASCII values, 512 total records, and one consumer generation. Every publish writes/reads all three objects; consumption uses four
 bounded fetches followed by one checkpoint.
 
-The complete local Node 26.7.0/PostgreSQL 17.11 chain observed:
+The public implementation run produced these raw single-run observations:
 
-| Metric | Local observation |
-|---|---:|
-| publish records/s | 422.789 |
-| publish batch p50 / p95 / max | 33.684 / 62.229 / 81.586 ms |
-| fetch records/s | 25,871.326 |
-| fetch p50 / p95 / max | 4.466 / 6.620 / 6.620 ms |
+| Runtime | Publish records/s | Publish batch p50 / p95 / max ms | Fetch records/s | Fetch p50 / p95 / max ms |
+|---|---:|---:|---:|---:|
+| Node 22.23.2 | 545.033 | 28.758 / 35.276 / 40.659 | 6,986.109 | 16.259 / 24.212 / 24.212 |
+| Node 24.19.0 | 604.531 | 25.205 / 30.676 / 42.024 | 8,450.769 | 13.735 / 19.425 / 19.425 |
+| Node 26.7.0 | 643.789 | 23.451 / 29.402 / 39.085 | 9,108.426 | 12.651 / 18.657 / 18.657 |
 
-This is one raw run, not a stable estimate or runtime ranking. It excludes network latency, independent hosts/disks, broker
-failover/consensus, compression, segment indexes, multi-partition balance, production extrapolation, and SLA.
+These concurrent CI jobs are raw observations, not a stable estimate or runtime ranking. The earlier complete local Node 26 run
+observed 422.789 publish records/s and 25,871.326 fetch records/s, which further demonstrates environmental variance. All runs
+exclude network latency, independent hosts/disks, broker failover/consensus, compression, segment indexes, multi-partition balance,
+production extrapolation, and SLA.
 
-## Public receipt placeholder
+## Public receipts
 
-No public receipt exists yet. When CI is green, this section must record:
+### Implementation gate
 
-- exact implementation commit;
-- exact GitHub Actions run URL and per-runtime job result;
-- pure/infrastructure counts and smoke summary;
-- per-runtime raw benchmark observations;
-- any retained red run and the precise defect it exposed;
-- the final documentation-only run separately from the implementation evidence.
+- Commit: `968e8b4896ace6130e4ac25c34da0b7817c79c82`
+- Run: [32194803417](https://github.com/estelledc/system-design-19-distributed-message-queue/actions/runs/32194803417)
+- Jobs: Node 22, 24, and 26 with PostgreSQL 17.11, all green
+- Per job: 17/17 pure, 12/12 infrastructure, zero skipped/failed/cancelled/todo, audit clear at the configured severity
+- Smoke per job: minority receipt recovered; publish response loss replayed; stale member checkpoint fenced; three records replayed
+  to the new member; checkpoint response loss replayed
+
+There was no red public CI run before this implementation gate. The retained readiness-port failure above was local and is not
+misrepresented as a GitHub Actions receipt.

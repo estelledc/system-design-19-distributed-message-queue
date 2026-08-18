@@ -10,14 +10,15 @@ chapter.
 
 ## Current phase
 
-The bounded implementation and complete local gate are green. The selected slice is one PostgreSQL-fenced synthetic partition
-whose immutable batch bytes must be read back from two of three local replica directories before the committed high watermark
-advances. Stable producer epoch/sequence and consumer-group generation/checkpoint receipts cover response loss and stale actors.
+The bounded implementation at `968e8b4896ace6130e4ac25c34da0b7817c79c82` passed the complete public Node 22/24/26 matrix in
+[GitHub Actions run 32194803417](https://github.com/estelledc/system-design-19-distributed-message-queue/actions/runs/32194803417).
+The selected slice is one PostgreSQL-fenced synthetic partition whose immutable batch bytes must be read back from two of three
+local replica directories before the committed high watermark advances. Stable producer epoch/sequence and consumer-group
+generation/checkpoint receipts cover response loss and stale actors.
 
-Public Node 22/24/26 CI is still pending, so there is no public implementation receipt yet. This is deliberately not a
-Kafka-compatible broker, Raft implementation, cross-host quorum, or disk-power-loss proof. The benchmark is one bounded local
-observation, not throughput capacity. No production deployment, SLA, downstream exactly-once outcome, or external acceptance is
-claimed.
+This is deliberately not a Kafka-compatible broker, Raft implementation, cross-host quorum, or disk-power-loss proof. The
+benchmark is one bounded CI observation, not throughput capacity. No production deployment, SLA, downstream exactly-once outcome,
+or external acceptance is claimed.
 
 ## What is executable
 
