@@ -2,8 +2,11 @@
 
 ## Current status
 
-Implementation commit `968e8b4896ace6130e4ac25c34da0b7817c79c82` passed the complete public matrix in
-[GitHub Actions run 32194803417](https://github.com/estelledc/system-design-19-distributed-message-queue/actions/runs/32194803417).
+The identity-safe rewrite preserved every existing tree, message, and timestamp while mapping the four commits in order: `2588827f5a0cb835bf51e3df11a06f9a3b60e15b` → `50662c21866ec27dceb6acf3892c924057fe0b9d`, `21f6ef4c72df2c7f4779fb279e3867e9c2263032` → `c07051fb23962d5feca19a0e8e8129a87ccb12b9`, `968e8b4896ace6130e4ac25c34da0b7817c79c82` → `6eb66d4f7710cfa3ad092837351d762d1f3bb909`, and `4854a88b988104efd52e2cf269f78b2660e2e664` → `d373466c4c6b57cf7a74b7f464efe0cd99265314`.
+
+Implementation commit `6eb66d4f7710cfa3ad092837351d762d1f3bb909` passed the complete tree-equivalent public matrix in historical pre-rewrite [GitHub Actions run 32194803417](https://github.com/estelledc/system-design-19-distributed-message-queue/actions/runs/32194803417). The run remains bound to the old commit object.
+
+Current reachable `main` uses the repository owner's GitHub noreply identity. Rewritten baseline `d373466c4c6b57cf7a74b7f464efe0cd99265314` passed [CI run 32227337919](https://github.com/estelledc/system-design-19-distributed-message-queue/actions/runs/32227337919) on Node 22, 24, and 26 with PostgreSQL 17.11 and the full quality gate.
 
 Each Node 22/24/26 job used the digest-pinned PostgreSQL 17.11 service and completed:
 
@@ -15,7 +18,7 @@ Each Node 22/24/26 job used the digest-pinned PostgreSQL 17.11 service and compl
 - the fixed 512-record benchmark with 32 batches, 96 replica receipts, and four fetches.
 
 No deployment, producer/client receipt, application handler, downstream side effect, independent-host durability, SLA, or external
-acceptance was tested. The implementation receipt stays bound to `968e8b4...`; later prose-only runs prove repository consistency
+acceptance was tested. The historical implementation receipt stays bound to the pre-rewrite object; the current equivalent is `6eb66d4...`. Later prose-only runs prove repository consistency
 for their own commits but do not rewrite the implementation observations.
 
 ## Retained local failure
@@ -109,7 +112,7 @@ production extrapolation, and SLA.
 
 ### Implementation gate
 
-- Commit: `968e8b4896ace6130e4ac25c34da0b7817c79c82`
+- Commit: `6eb66d4f7710cfa3ad092837351d762d1f3bb909`
 - Run: [32194803417](https://github.com/estelledc/system-design-19-distributed-message-queue/actions/runs/32194803417)
 - Jobs: Node 22, 24, and 26 with PostgreSQL 17.11, all green
 - Per job: 17/17 pure, 12/12 infrastructure, zero skipped/failed/cancelled/todo, audit clear at the configured severity
