@@ -22,7 +22,7 @@
     "check:ci": "npm run check && npm run test:infra && npm run smoke:infra && npm run benchmark:infra"
   },
   "dependencies": {
-    "pg": "8.23.0"
+    "pg": "8.23.1"
   },
   "keywords": [
     "system-design",
